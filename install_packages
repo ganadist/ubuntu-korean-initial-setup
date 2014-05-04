@@ -1,0 +1,11 @@
+#!/bin/sh
+
+install_additional_packages() {
+  for S in ppa:jincreator/freetype ppa:boramism/unity-1404
+  do
+    add-apt-repository $S
+  done
+  apt-get update && apt-get -y upgrade
+}
+
+install_additional_packages

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+which git > /dev/null
+if [ $? -ne 0 ]; then
+  if zenity --question --text "패키지 설치를 위해 패스워드를 물어볼껍니다.\n여러분의 패스워드를 입력해주세요."; then
+    pkexec apt-get -y install git
+  else
+    exit 1
+  fi
+fi
+
+APPNAME=ubuntu-korean-initial-setup
+DATA_DIR=$HOME/.local/share
+
+if [ -d $DATA_DIR/$APPNAME/.git ]; then
+  cd $DATA_DIR/$APPNAME
+  git pull
+  cd $OLDPWD
+else
+  git clone -b trusty https://github.com/ganadist/$APPNAME $DATA_DIR/$APPNAME
+fi
+
+exec $DATA_DIR/$APPNAME/real_setup

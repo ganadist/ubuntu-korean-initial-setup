@@ -1,0 +1,24 @@
+#!/bin/sh
+
+dconf_write() {
+  dconf write "$1" "$2"
+}
+
+setup_input_method() {
+  dconf_write /desktop/ibus/panel/show 0
+  dconf_write /org/gnome/desktop/wm/keybindings/switch-input-source "['<Shift>space']"
+  dconf_write /org/gnome/desktop/wm/keybindings/switch-input-source-backward "['Hangul']"
+  dconf_write /org/gnome/desktop/input-sources/sources "[('xkb', 'us'), ('ibus', 'hangul')]"
+}
+
+main() {
+  setup_input_method
+  DIRNAME=$(dirname $0)
+  pkexec $DIRNAME/install_packages
+
+  if zenity --question --text "설치가 완료되었습니다.\n다시 로그인해야 변경점이 적용됩니다.\n새로 로그인 하시겠습니까?"; then
+    gnome-session-quit --logout --no-prompt
+  fi
+}
+
+main
